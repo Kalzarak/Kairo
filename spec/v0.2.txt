@@ -1,0 +1,145 @@
+# Kairo Programming Language (v0.2)
+
+Kairo is a general-purpose, AI-native programming language optimized for symbolic reasoning, token efficiency, and compiler safety. It is designed for high-fidelity code generation by both humans and artificial intelligence systems.
+
+--------------------
+🔑 Key Features
+--------------------
+- Indentation-based syntax (no `{}` blocks)
+- Token-optimized (`>>`, `=>`, `:=`)
+- Strong, immutable typing (default)
+- No implicit coercion
+- Modular annotations (e.g. @pure, @reflect)
+- Ready for AI generation and human use
+
+--------------------
+🔤 Type System
+--------------------
+int        # Integer
+float      # Floating point
+bool       # Boolean
+string     # UTF-8 string
+char       # Single character
+maybe<T>   # Nullable type
+list<T>    # Homogenous list
+map<K,V>   # Key-value store
+none       # Explicit null
+
+--------------------
+🔧 Variables
+--------------------
+let age: int := 25
+let name: string := "Kairo"
+let mut score: float := 0.0
+
+--------------------
+🧠 Functions
+--------------------
+fn add(a: int, b: int) -> int
+  return a + b
+
+@pure fn square(x: int) -> int
+  return x * x
+
+@reflect fn describe(obj: any) -> string
+  return meta(obj)
+
+--------------------
+📦 Structs
+--------------------
+struct User
+  id: int
+  name: string
+
+let admin := User(id: 1, name: "Root")
+
+# Inline Struct
+let point := struct
+  x: float := 1.0
+  y: float := 2.0
+
+--------------------
+🔁 Control Flow
+--------------------
+@if age >= 18
+  grant_access()
+
+@else
+  deny()
+
+@match signal
+  "red" => stop()
+  "green" => go()
+  _ => wait()
+
+@loop
+  do_work()
+  @if done
+    break
+
+--------------------
+📄 Comments
+--------------------
+# Single-line
+
+"""
+Multi-line
+block comment
+"""
+
+--------------------
+🧩 Error Handling
+--------------------
+try risky_call()
+  @on_error log("Failure")
+
+--------------------
+🧠 Annotations
+--------------------
+@pure             # No side effects
+@reflect          # Allows introspection
+@deterministic    # Same output for same input
+@no_io            # Disables I/O
+@guard            # Conditional pre-check
+@trace            # Enables debugging hooks
+@label("x")       # Tag blocks for trace/debug
+
+--------------------
+📍 Memory Zones
+--------------------
+@heap let data := load_large_set()
+@static let config := default_config()
+
+--------------------
+➡️ Pipeline Flow
+--------------------
+load() >> transform() >> export()
+
+--------------------
+🌐 Interfaces
+--------------------
+@interface Runnable
+  fn run() -> void
+
+--------------------
+📌 Sample Program
+--------------------
+@pure fn factorial(n: int) -> int
+  @if n <= 1
+    return 1
+  @else
+    return n * factorial(n - 1)
+
+--------------------
+🛣️ Roadmap
+--------------------
+- [x] v0.2 Grammar Complete
+- [ ] Rust Transpiler
+- [ ] Native Compiler (WASM/LLVM/ASM)
+- [ ] AST Tools + Optimizer
+- [ ] Debugger + Tooling
+
+--------------------
+📄 License
+--------------------
+MIT License (see LICENSE)
