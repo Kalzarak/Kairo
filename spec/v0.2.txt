@@ -96,13 +96,14 @@ try risky_call()
 --------------------
 🧠 Annotations
 --------------------
-@pure             # No side effects
-@reflect          # Allows introspection
-@deterministic    # Same output for same input
-@no_io            # Disables I/O
-@guard            # Conditional pre-check
-@trace            # Enables debugging hooks
-@label("x")       # Tag blocks for trace/debug
+@pure         # No side effects (no mutation, I/O, or state); allows full optimization by the compiler: auto-parallelize, cache, inline, reorder
+@reflect      # Enables introspection (runtime access to type info, structure, or metadata)
+@deterministic# Must return identical output for identical input; used in model validation or caching
+@no_io        # Disallows file, net, or console I/O within this block (for sandboxing or testing)
+@guard        # Conditional pre-check block, evaluated before function runs (e.g. @guard x > 0)
+@trace        # Enables debug or trace logging inside the block
+@label("x")   # Tags a block with a custom label (e.g., for trace, profiling, or introspection)
+
 
 --------------------
 📍 Memory Zones
