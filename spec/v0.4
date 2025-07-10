@@ -1,0 +1,235 @@
+Kairo Programming Language – Core Syntax and Semantics (v0.4)
+
+
+--- Language Philosophy ---
+
+Kairo is designed for AI-native, human-compatible systems with a focus on memory safety, predictability, and structured expressiveness. It is optimized for compilation to Rust (and eventually ASM), 
+and intended for highly efficient symbolic reasoning, AI codegen accuracy, and robust systems development. Kairo defaults to **immutability** and **strong typing**, using minimal syntax to maximize 
+clarity. Mutability, reflection, and side-effects must be explicitly declared.
+
+--- Variable Declaration ---
+
+### General Format:
+
+let type: name := value   # Immutable (default)
+let type: name = value    # Mutable
+let type: name :: value   # Fixed constant (e.g. library or compile-time constant)
+
+* `:=` = immutable
+* `=` = mutable
+* `::` = fixed/constant (no reassignment allowed ever)
+* `let` is required for all first-time declarations
+
+### Examples:
+
+let int: score := 100
+let int: count = 0
+let str: GREETING :: "Hello!"
+
+
+--- Container Types ---
+
+### Inline Structs:
+
+let Data: info := { key1: value1, key2: value2 }
+
+### Lists:
+
+let list<int>: values := [1, 2, 3, 4]
+
+### Sets:
+
+let set<int>: odds := [1, 3, 5, 7]
+
+### Tensors:
+
+# Shallow tensor
+let tensor<int>: grid := [[1, 2], [3, 4]]
+
+# Deep tensor with metadata (structured format)
+let Tensor: memory := {
+  shape: [2, 2],
+  dtype: int,
+  data: [[1, 2], [3, 4]]
+}
+
+# Tensors use `[]` for shape/data blocks
+# Deep levels must re-specify lower-dim elements
+# Use `tensor<T>` or `Tensor` struct-style for compatibility
+
+
+--- Functions ---
+
+### Declaration:
+
+@pure fn double(val: int) -> int
+    return val * 2
+
+fn greet(name: str) -> str
+    return "Hello, " + name
+
+# `@pure` = no side-effects or external state access
+# `@no_io` = no print, file, or device IO
+# `@deterministic` = must return same result for same input
+# `@reflect` = allows introspection
+
+### Multiple Annotations (Inline):
+
+@pure @deterministic fn calc(x: int) -> int
+    return x * x
+
+### Ownership Modifiers:
+
+fn move_token(tok: own<Token>) -> void
+fn borrow_conf(cfg: borrow<Config>) -> str
+fn mutate_conf(cfg: share<Config>) -> void
+
+* `own<T>` = takes ownership
+* `borrow<T>` = read-only reference
+* `share<T>` = shared mutable reference
+
+
+--- Loops and Flow Control ---
+
+### If / Elif / Else:
+
+if score > 90
+    return "A"
+elif score > 80
+    return "B"
+else
+    return "Try again"
+
+### While:
+
+while counter < 10
+    counter = counter + 1
+
+### For:
+
+for i in 0..10
+    print(i)
+
+### Match:
+
+match result
+    Ok(v) => return v
+    Error(m) => return -1
+    
+
+--- Operators ---
+
+# Arithmetic: `+`, `-`, `*`, `/`, `%`
+# Boolean: `&&`, `||`, `!`
+# Comparison: `==`, `!=`, `<`, `>`, `<=`, `>=`
+# Assignment: `:=` (immutable), `=` (mutable), `::` (fixed)
+# Logic Flow: `=>` (optional inline form only)
+# Function Return: `->` (used in function declarations)
+# Pipeline Flow: `>>` (used for chaining functions)
+
+### Operator Notes:
+
+# `=>` is used only for **inline expressions**: `if x => do()`
+# If you're indenting a block below a condition, `=>` is not needed
+# `>>` denotes piped evaluation from left to right: `load() >> transform() >> save()`
+# `->` specifies function return types for clarity and type safety
+
+
+--- Type System ---
+
+### Core Types:
+
+`int`, `float`, `bool`, `str`, `none`, `Void`
+
+### Composite:
+
+`list<T>`, `set<T>`, `tensor<T>`, inline structs
+
+### Type Aliases:
+
+type Score = int
+let Score: final := 100
+
+Type aliases may be used for semantics, readability, or tagging domain-specific primitives (e.g. `Score`, `Age`, `TokenId`). They are optional.
+
+### Ownership:
+
+`own<T>`, `borrow<T>`, `share<T>` are part of the type system for memory model enforcement
+
+
+--- Import System ---
+
+### Import Module:
+
+import math::algorithms
+use time::clock
+
+# `import` brings in full module path
+# `use` optionally selects submodule or item
+# Paths follow `::` structure similar to Rust
+
+
+--- Pattern Matching & Interfaces ---
+
+### Tagged Enums:
+
+enum Result
+    Ok(value: int)
+    Error(message: str)
+
+### Interfaces:
+
+interface Printable
+    fn print() -> str
+
+
+--- Comments ---
+
+# This is a single-line comment
+
+"""
+This is a multi-line
+block comment
+"""
+
+
+--- Meta Annotations ---
+
+# `@pure` → No side effects
+# `@no_io` → No IO
+# `@deterministic` → Deterministic return
+# `@reflect` → Runtime inspection allowed
+# `@static` / `@heap` → Optional memory zones
+# `@trace`, `@label` → Debug/annotation hooks
+# `@on_error`, `try` → Error handling
+
+
+--- Planned Upgrades ---
+
+### Error Handling:
+
+# Add support for `panic`, `expect`, `fallback`
+# Optional `Result<T, E>` style pattern in pattern match
+
+
+--- Notes for Use ---
+
+* `@` is reserved strictly for **compiler annotations**
+* Control flow (`if`, `elif`, `else`, `while`, `match`, `for`) uses normal keywords
+* Containers (`set`, `tensor`, `list`) are top-level keywords
+* Avoid `{}` for logic flow — use indentation blocks
+* Mutability is controlled by `:=` vs `=` only
+* `::` is reserved for permanent constants (library or fixed-ABI declarations)
+* Use `>>` for function pipelines, `=>` for inline conditions/patterns, `->` for return types
+* Use `own<T>`, `borrow<T>`, `share<T>` for memory modeling
+
+
+--- Optimized for ---
+
+# AI accuracy
+# Speed of compilation
+# Rust & ASM compatibility
+# Human-legible, non-symbolic tokens (where possible)
+
+
+End of Kairo Spec v0.4
